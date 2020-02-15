@@ -9,6 +9,7 @@ import './App.css';
 // consume that data in some child (nested) component
 
 const PersonContext = createContext();
+const TitleContext = createContext();
 
 function App () {
 	const [
@@ -26,7 +27,8 @@ function App () {
 					person,
 					setPerson,
 				]}>
-				<Person otherProps={"I'm some different prop"} />
+				<HookPerson otherProps={"I'm some different prop"} />
+        <RenderPropPerson otherProps={"I am a Render Prop Person."}/>
 			</PersonContext.Provider>
 
 			{/*<Provider>
@@ -37,25 +39,33 @@ function App () {
 	);
 }
 
-const Person = props => {
+const HookPerson = props => {
 	const [
 		person,
 		setPerson,
 	] = useContext(PersonContext); // consuming "person" from PersonContext!
-	// const {name} = useContext(PersonContext) This is a second option if not passing an array!
+  // const {name} = useContext(PersonContext) This is a second option if not passing an array!
+  const title = useContext(TitleContext)
 	return (
 		<div>
-			<h1>{person.name}</h1>
-			<h2>{props.otherProps}</h2>
+			<h1>Hook Context: {person.name}</h1>
+			<h2>Hook Prop: {props.otherProps}</h2>
 			{/* <h1>{name}</h1> This can be used if not passing an array */}
 		</div>
 	);
 };
 
-// Render prop pattern to consume dcata from ctx without using the "useContext" hook
+// Render prop pattern to consume data from ctx without using the "useContext" hook
 
 const RenderPropPerson = () => {
-  
-}
+	return (
+		<div>
+      <h1>Hello Students!</h1>
+			<PersonContext.Consumer>
+				{([person, setPerson]) => <h1>{person.name}</h1>}
+			</PersonContext.Consumer>
+		</div>
+	);
+};
 
 export default App;
