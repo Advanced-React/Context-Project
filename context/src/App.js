@@ -1,5 +1,4 @@
 import React, { useState, createContext, useContext } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 // using context
@@ -22,14 +21,16 @@ function App () {
 
 	return (
 		<div className='App'>
-			<PersonContext.Provider
-				value={[
-					person,
-					setPerson,
-				]}>
-				<HookPerson otherProps={"I'm some different prop"} />
-        <RenderPropPerson otherProps={"I am a Render Prop Person."}/>
-			</PersonContext.Provider>
+			<TitleContext.Provider value='Hello'>
+				<PersonContext.Provider
+					value={[
+						person,
+						setPerson,
+					]}>
+					<RenderPropPerson otherProps={'I am a Render Prop Person.'} />
+					<HookPerson otherProps={"I'm some different prop"} />
+				</PersonContext.Provider>
+			</TitleContext.Provider>
 
 			{/*<Provider>
         <Person />
@@ -44,12 +45,13 @@ const HookPerson = props => {
 		person,
 		setPerson,
 	] = useContext(PersonContext); // consuming "person" from PersonContext!
-  // const {name} = useContext(PersonContext) This is a second option if not passing an array!
-  const title = useContext(TitleContext)
+	// const {name} = useContext(PersonContext) This is a second option if not passing an array!
+	const title = useContext(TitleContext);
 	return (
 		<div>
-			<h1>Hook Context: {person.name}</h1>
-			<h2>Hook Prop: {props.otherProps}</h2>
+			<h1>{title}</h1>
+			<h2>Hook Context: {person.name}</h2>
+			<h3>Hook Prop: {props.otherProps}</h3>
 			{/* <h1>{name}</h1> This can be used if not passing an array */}
 		</div>
 	);
@@ -60,10 +62,16 @@ const HookPerson = props => {
 const RenderPropPerson = () => {
 	return (
 		<div>
-      <h1>Hello Students!</h1>
+			<h2>Hello Students!</h2>
 			<PersonContext.Consumer>
-				{([person, setPerson]) => <h1>{person.name}</h1>}
+				{(
+					[
+						person,
+						setPerson,
+					],
+				) => <h3>{person.name}</h3>}
 			</PersonContext.Consumer>
+			<TitleContext.Consumer>{Title => <h1>{Title}</h1>}</TitleContext.Consumer>
 		</div>
 	);
 };
